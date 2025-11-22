@@ -2,8 +2,8 @@
    GLOBAL ROOT VARIABLES (THEME + COLORS)
 ------------------------------------------------------ */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
 
   --primary: #7c3aed;
@@ -25,20 +25,32 @@
 /* -----------------------------------------------------
    GLOBAL ELEMENT RESETS
 ------------------------------------------------------ */
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
   background: var(--bg-dark);
   color: var(--text-light);
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Links */
 a {
   color: var(--primary-light);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
+
 a:hover {
   color: var(--primary);
 }
@@ -46,23 +58,64 @@ a:hover {
 /* Buttons */
 button {
   border: none;
-  border-radius: 6px;
-  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  padding: 0.65rem 1.2rem;
   background: var(--primary);
   color: white;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
+
 button:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Input & Select */
+input,
+select {
+  font-family: inherit;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
   background: var(--primary-light);
 }
 
-/* Light mode preference */
+/* Light mode preference - Optional */
 @media (prefers-color-scheme: light) {
   :root {
-    background-color: #ffffff;
-    color: #1c1b22;
+    --bg-dark: #f5f3ff;
+    --bg-card: #ffffff;
+    --text-light: #1c1b22;
+    --text-muted: #6b21a8;
+    --primary: #7c3aed;
+    --primary-light: #6b21a8;
   }
 }
