@@ -3,8 +3,8 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { PodcastContextProvider } from "./context/PodcastContext";
 import Header from "./components/UI/Header";
-import Home from "./pages/Home";
-import ShowDetails from "./pages/ShowDetails";
+import Home from "./Pages/Home";
+import ShowDetails from "./Pages/ShowDetails";
 
 /**
  * @component App
