@@ -1,0 +1,23 @@
+.sort-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sort-select__label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.sort-select__select {
+  padding: 0.55rem;
+  background: var(--bg-card);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.sort-select__select:hover {
+  border-color: var(--primary-light);
+}

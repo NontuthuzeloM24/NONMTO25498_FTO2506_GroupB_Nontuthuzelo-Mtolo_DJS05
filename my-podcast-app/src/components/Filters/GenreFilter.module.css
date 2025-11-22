@@ -1,0 +1,30 @@
+.genre-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.genre-filter__label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.genre-filter__select {
+  padding: 0.55rem;
+  background: var(--bg-card);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.genre-filter__select:hover {
+  border-color: var(--primary-light);
+}
+
+@media (min-width: 700px) {
+  .genre-filter {
+    flex-direction: column;
+  }
+}
