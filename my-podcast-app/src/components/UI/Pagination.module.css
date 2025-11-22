@@ -11,8 +11,6 @@
   padding: 0;
 }
 
-.pagination__item {}
-
 .pagination__button {
   padding: 0.5rem 0.85rem;
   background: var(--bg-card);
