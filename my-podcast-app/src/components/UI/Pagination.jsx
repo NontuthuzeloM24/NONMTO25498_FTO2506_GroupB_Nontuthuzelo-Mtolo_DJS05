@@ -1,21 +1,26 @@
+import React from "react";
+import styles from "./Pagination.module.css";
+
 /**
- * Pagination component
- * Props:
- * - currentPage: number
- * - totalPages: number
- * - onPageChange: function(page)
+ * @component Pagination
+ * Pagination component for navigating through pages of content.
+ * @param {Object} props
+ * @param {number} props.currentPage - Current active page number
+ * @param {number} props.totalPages - Total number of pages
+ * @param {Function} props.onPageChange - Callback function when page is changed, receives page number
+ * @returns {jsx.Element|null} Pagination buttons or null if only one page
  */
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
   if (totalPages <= 1) return null;
 
   return (
-    <nav className="pagination">
-      <ul className="pagination__list">
+    <nav className={styles.pagination}>
+      <ul className={styles.list}>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <li key={page} className="pagination__item">
+          <li key={page} className={styles.item}>
             <button
-              className={`pagination__button ${
-                currentPage === page ? "pagination__button--active" : ""
+              className={`${styles.button} ${
+                currentPage === page ? styles.buttonActive : ""
               }`}
               onClick={() => onPageChange(page)}
               aria-current={currentPage === page ? "page" : undefined}

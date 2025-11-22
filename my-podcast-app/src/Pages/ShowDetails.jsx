@@ -4,7 +4,14 @@ import { fetchShowById } from "../api/fetchData";
 import PodcastDetail from "../components/Podcast/PodcastDetail";
 import Loading from "../components/UI/Loading";
 import Error from "../components/UI/Error";
+import styles from "./ShowDetails.module.css";
 
+/**
+ * @component ShowDetails
+ * Page component that displays detailed information about a specific podcast show.
+ * Fetches show data based on URL parameter and allows navigation back to home.
+ * @returns {jsx.Element} The show details page
+ */
 export default function ShowDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -14,15 +21,20 @@ export default function ShowDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Preserve homepage filters/search when navigating back
+  /**
+   * Handle back button click - preserves homepage filters/search when navigating back
+   */
   const handleBackClick = () => {
     if (location.key !== "default") {
       navigate(-1);
     } else {
-      navigate("/"); // fallback if direct link opened
+      navigate("/");
     }
   };
 
+  /**
+   * Fetch show details when component mounts or ID changes
+   */
   useEffect(() => {
     setLoading(true);
     fetchShowById(id)
@@ -37,12 +49,11 @@ export default function ShowDetails() {
   }, [id]);
 
   if (loading) return <Loading />;
-
   if (error) return <Error message={error} />;
 
   return (
-    <main className="show-details">
-      <button className="show-details__back-button" onClick={handleBackClick}>
+    <main className={styles.showDetails}>
+      <button className={styles.backButton} onClick={handleBackClick}>
         ← Back
       </button>
 

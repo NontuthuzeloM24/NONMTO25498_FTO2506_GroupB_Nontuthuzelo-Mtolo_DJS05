@@ -1,18 +1,32 @@
 import React, { useState } from "react";
 import { formatDate } from "../../utils/formatDate";
+import styles from "./PodcastDetail.module.css";
 
 /**
- * PodcastDetail component
- * Props:
- * - show: detailed show object including seasons and episodes
+ * @component PodcastDetail
+ * Detailed view component for a podcast show, displaying seasons and episodes.
+ * @param {Object} props
+ * @param {Object} props.show - Detailed show object
+ * @param {string} props.show.id - Show identifier
+ * @param {string} props.show.title - Show title
+ * @param {string} props.show.image - Show cover image URL
+ * @param {string} props.show.description - Full show description
+ * @param {string} props.show.updated - Last updated date
+ * @param {Array<Object>} props.show.genres - Array of genre objects with id and name
+ * @param {Array<Object>} props.show.seasons - Array of season objects with episodes
+ * @returns {JSX.Element} Detailed podcast view with expandable seasons
  */
 export default function PodcastDetail({ show }) {
   const [expandedSeasons, setExpandedSeasons] = useState({});
 
   if (!show) {
-    return <p className="podcast-detail__not-found">Show not found.</p>;
+    return <p className={styles.notFound}>Show not found.</p>;
   }
 
+  /**
+   * Toggle season expansion state
+   * @param {number} seasonNumber - Season number to toggle
+   */
   const toggleSeason = (seasonNumber) => {
     setExpandedSeasons((prev) => ({
       ...prev,
@@ -21,57 +35,67 @@ export default function PodcastDetail({ show }) {
   };
 
   return (
-    <section className="podcast-detail">
-      <h2 className="podcast-detail__title">{show.title}</h2>
-      <img
-        className="podcast-detail__image"
-        src={show.image}
-        alt={`${show.title} podcast`}
-      />
-      <p className="podcast-detail__description">{show.description}</p>
+    <section className={styles.podcastDetail}>
+      <div className={styles.header}>
+        <img
+          className={styles.image}
+          src={show.image}
+          alt={`${show.title} podcast`}
+        />
+        <div className={styles.info}>
+          <h2 className={styles.title}>{show.title}</h2>
+          <p className={styles.description}>{show.description}</p>
 
-      <div className="podcast-detail__genres">
-        {show.genres &&
-          show.genres.map((genre) => (
-            <span key={genre.id} className="podcast-detail__genre-tag">
-              {genre.name}
-            </span>
-          ))}
+          {show.genres && show.genres.length > 0 && (
+            <div className={styles.genres}>
+              {show.genres.map((genre) => (
+                <span key={genre} className={styles.genreTag}>
+                  Genre {genre}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <p className={styles.lastUpdated}>
+            Last updated: {formatDate(show.updated)}
+          </p>
+        </div>
       </div>
 
-      <p className="podcast-detail__last-updated">
-        Last updated: {formatDate(show.last_updated)}
-      </p>
-
-      <div className="podcast-detail__seasons">
+      <div className={styles.seasons}>
+        <h3 className={styles.seasonsTitle}>Seasons</h3>
         {show.seasons.map((season) => (
-          <div key={season.id} className="podcast-detail__season">
+          <div key={season.season} className={styles.season}>
             <button
-              className="podcast-detail__season-toggle"
-              onClick={() => toggleSeason(season.season_number)}
-              aria-expanded={!!expandedSeasons[season.season_number]}
+              className={styles.seasonToggle}
+              onClick={() => toggleSeason(season.season)}
+              aria-expanded={!!expandedSeasons[season.season]}
             >
-              {`Season ${season.season_number} (${season.episodes.length} episodes)`}
+              <span className={styles.seasonTitle}>
+                Season {season.season} ({season.episodes.length} episodes)
+              </span>
+              <span className={styles.seasonIcon}>
+                {expandedSeasons[season.season] ? "▼" : "▶"}
+              </span>
             </button>
-            {expandedSeasons[season.season_number] && (
-              <ul className="podcast-detail__episode-list">
+
+            {expandedSeasons[season.season] && (
+              <ul className={styles.episodeList}>
                 {season.episodes.map((episode) => (
-                  <li key={episode.id} className="podcast-detail__episode">
+                  <li key={episode.episode} className={styles.episode}>
                     <img
                       src={episode.image || season.image || show.image}
                       alt={episode.title}
-                      className="podcast-detail__episode-image"
+                      className={styles.episodeImage}
                     />
-                    <div className="podcast-detail__episode-info">
-                      <p className="podcast-detail__episode-number">
-                        Episode {episode.episode_number}
+                    <div className={styles.episodeInfo}>
+                      <p className={styles.episodeNumber}>
+                        Episode {episode.episode}
                       </p>
-                      <h4 className="podcast-detail__episode-title">
-                        {episode.title}
-                      </h4>
-                      <p className="podcast-detail__episode-description">
-                        {episode.description.length > 100
-                          ? episode.description.slice(0, 100) + "..."
+                      <h4 className={styles.episodeTitle}>{episode.title}</h4>
+                      <p className={styles.episodeDescription}>
+                        {episode.description.length > 150
+                          ? episode.description.slice(0, 150) + "..."
                           : episode.description}
                       </p>
                     </div>

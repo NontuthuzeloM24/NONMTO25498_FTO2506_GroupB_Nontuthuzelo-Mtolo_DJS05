@@ -1,20 +1,23 @@
 import React from "react";
+import styles from "./SortSelect.module.css";
 
 /**
- * SortSelect component
- * Props:
- * - sortOrder: current sort order
- * - onChange: function(newSortOrder)
+ * @component SortSelect
+ * Dropdown component for sorting podcasts by various criteria.
+ * @param {Object} props
+ * @param {string} props.sortOrder - Current sort order value
+ * @param {Function} props.onChange - Callback function when sort selection changes, receives new sort order
+ * @returns {JSX.Element} Sort dropdown selector
  */
 export default function SortSelect({ sortOrder, onChange }) {
   return (
-    <div className="sort-select">
-      <label htmlFor="sort-select" className="sort-select__label">
+    <div className={styles.sortSelect}>
+      <label className={styles.label} htmlFor="sort">
         Sort:
       </label>
       <select
-        id="sort-select"
-        className="sort-select__select"
+        className={styles.select}
+        id="sort"
         value={sortOrder}
         onChange={(e) => onChange(e.target.value)}
       >

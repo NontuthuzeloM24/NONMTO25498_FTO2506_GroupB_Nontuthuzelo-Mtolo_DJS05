@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { fetchShows } from "../api/fetchData";
 import GenreFilter from "../components/Filters/GenreFilter";
 import SearchBar from "../components/Filters/SearchBar";
@@ -7,12 +7,18 @@ import SortSelect from "../components/Filters/SortSelect";
 import PodcastGrid from "../components/Podcast/PodcastGrid";
 import Loading from "../components/UI/Loading";
 import Error from "../components/UI/Error";
+import styles from "./Home.module.css";
 
 const PAGE_SIZE = 10;
 
+/**
+ * @component Home
+ * Home page component that displays podcast list with filtering, search, sort, and pagination.
+ * Uses URL search parameters to maintain state across navigation.
+ * @returns {jsx.Element} The home page with podcast grid and controls
+ */
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const [shows, setShows] = useState([]);
   const [filteredShows, setFilteredShows] = useState([]);
@@ -20,15 +26,14 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
 
-  // Extract filters/search/sort from URL params
   const searchTerm = searchParams.get("search") || "";
   const selectedGenre = searchParams.get("genre") || "";
   const sortOrder = searchParams.get("sort") || "";
-
-  // Pagination page param
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
 
-  // Load shows once on mount
+  /**
+   * Load shows once on component mount
+   */
   useEffect(() => {
     setLoading(true);
     fetchShows()
@@ -42,38 +47,37 @@ export default function Home() {
       });
   }, []);
 
-  // Apply filters, search, sort, and pagination whenever shows or params change
+  /**
+   * Apply filters, search, sort, and pagination whenever shows or params change
+   */
   useEffect(() => {
     if (!shows.length) return;
 
     let filtered = [...shows];
 
-    // Filter by genre if selected
     if (selectedGenre) {
-      filtered = filtered.filter(
-        (show) => show.genres && show.genres.includes(selectedGenre)
+      filtered = filtered.filter((show) =>
+        show.genres ? show.genres.includes(Number(selectedGenre)) : false
       );
     }
 
-    // Search filter
     if (searchTerm) {
       filtered = filtered.filter((show) =>
         show.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Sort
     if (sortOrder === "title-asc") {
       filtered.sort((a, b) => a.title.localeCompare(b.title));
     } else if (sortOrder === "title-desc") {
       filtered.sort((a, b) => b.title.localeCompare(a.title));
     } else if (sortOrder === "updated-desc") {
       filtered.sort(
-        (a, b) => new Date(b.last_updated) - new Date(a.last_updated)
+        (a, b) => new Date(b.updated) - new Date(a.updated)
       );
     } else if (sortOrder === "updated-asc") {
       filtered.sort(
-        (a, b) => new Date(a.last_updated) - new Date(b.last_updated)
+        (a, b) => new Date(a.updated) - new Date(b.updated)
       );
     }
 
@@ -81,7 +85,10 @@ export default function Home() {
     setPage(pageParam > 0 ? pageParam : 1);
   }, [shows, searchTerm, selectedGenre, sortOrder, pageParam]);
 
-  // Handler to update URL params on filter/search/sort change
+  /**
+   * Handler to update URL params on filter/search/sort change
+   * @param {Object} params - Object with key-value pairs to update in URL
+   */
   const updateSearchParams = (params) => {
     const newParams = new URLSearchParams(searchParams);
     Object.entries(params).forEach(([key, value]) => {
@@ -92,12 +99,14 @@ export default function Home() {
     setSearchParams(newParams);
   };
 
-  // Handle pagination clicks
+  /**
+   * Handle pagination clicks
+   * @param {number} newPage - Page number to navigate to
+   */
   const goToPage = (newPage) => {
     updateSearchParams({ page: newPage.toString() });
   };
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredShows.length / PAGE_SIZE);
   const pageShows = filteredShows.slice(
     (page - 1) * PAGE_SIZE,
@@ -108,14 +117,16 @@ export default function Home() {
   if (error) return <Error message={error} />;
 
   return (
-    <main className="home">
-      <section className="home__filters">
+    <main className={styles.home}>
+      <section className={styles.filters}>
         <GenreFilter
           selectedGenreId={selectedGenre}
-          onChange={(genreId) => updateSearchParams({ genre: genreId, page: "1" })}
+          onChange={(genreId) =>
+            updateSearchParams({ genre: genreId, page: "1" })
+          }
         />
         <SearchBar
-          searchTerm={searchTerm}
+          value={searchTerm}
           onChange={(term) => updateSearchParams({ search: term, page: "1" })}
         />
         <SortSelect
@@ -124,26 +135,26 @@ export default function Home() {
         />
       </section>
 
-      <PodcastGrid shows={pageShows} />
+      <div className={styles.gridWrapper}>
+        <PodcastGrid shows={pageShows} />
+      </div>
 
-      <section className="home__pagination">
-        {totalPages > 1 && (
-          <nav className="pagination">
-            {[...Array(totalPages).keys()].map((i) => (
-              <button
-                key={i + 1}
-                className={`pagination__button ${
-                  page === i + 1 ? "pagination__button--active" : ""
-                }`}
-                onClick={() => goToPage(i + 1)}
-                aria-current={page === i + 1 ? "page" : undefined}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </nav>
-        )}
-      </section>
+      {totalPages > 1 && (
+        <section className={styles.pagination}>
+          {[...Array(totalPages).keys()].map((i) => (
+            <button
+              key={i + 1}
+              className={`${styles.paginationButton} ${
+                page === i + 1 ? styles.paginationButtonActive : ""
+              }`}
+              onClick={() => goToPage(i + 1)}
+              aria-current={page === i + 1 ? "page" : undefined}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </section>
+      )}
     </main>
   );
 }

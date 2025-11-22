@@ -1,10 +1,10 @@
-// src/api/fetchData.js
-
 const BASE_URL = "https://podcast-api.netlify.app";
 
 /**
- * Fetch the list of podcast previews.
- * @returns {Promise<Array>} Array of show preview objects.
+ * @function fetchShows
+ * Fetch the list of podcast previews from the API.
+ * @returns {Promise<Array>} Promise resolving to array of show preview objects
+ * @throws {Error} If the fetch request fails
  */
 export async function fetchShows() {
   const res = await fetch(`${BASE_URL}/`);
@@ -13,9 +13,11 @@ export async function fetchShows() {
 }
 
 /**
- * Fetch genre object by genre ID.
- * @param {string|number} genreId
- * @returns {Promise<Object>} Genre object
+ * @function fetchGenreById
+ * Fetch genre object by genre ID from the API.
+ * @param {string|number} genreId - The genre ID to fetch
+ * @returns {Promise<Object>} Promise resolving to genre object with title, description, and shows
+ * @throws {Error} If the fetch request fails
  */
 export async function fetchGenreById(genreId) {
   const res = await fetch(`${BASE_URL}/genre/${genreId}`);
@@ -24,9 +26,11 @@ export async function fetchGenreById(genreId) {
 }
 
 /**
- * Fetch detailed show object by show ID.
- * @param {string|number} showId
- * @returns {Promise<Object>} Detailed show object with seasons and episodes
+ * @function fetchShowById
+ * Fetch detailed show object by show ID from the API.
+ * @param {string|number} showId - The show ID to fetch
+ * @returns {Promise<Object>} Promise resolving to detailed show object with seasons and episodes
+ * @throws {Error} If the fetch request fails
  */
 export async function fetchShowById(showId) {
   const res = await fetch(`${BASE_URL}/id/${showId}`);
